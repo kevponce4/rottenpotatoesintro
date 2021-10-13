@@ -9,13 +9,25 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.all_ratings
     @ratings_to_show = []
+    @title_style ="bg-white hilite"
+    @release_date_style = "bg-white hilite"
     if params[:ratings].nil?
       @ratings_to_show = @all_ratings
     else
       @ratings_to_show = params[:ratings].keys
-      
+    @ratings = params[:ratings]
     end
-    @movies = Movie.where(:rating => @ratings_to_show)
+    @order = ""
+    if params[:sort] == "title"
+      @order = :title
+      @title_style = "bg-warning hilite"
+      @release_date_style = "bg-white hilite"
+    elsif params[:sort] == "release_date"
+      @order = :release_date
+      @release_date_style = "bg-warning hilite"
+      @title_style = "bg-white hilite"
+    end
+    @movies = Movie.where(:rating => @ratings_to_show).order params[:sort]
   end
 
   def new
@@ -34,6 +46,7 @@ class MoviesController < ApplicationController
 
   def update
     @movie = Movie.find params[:id]
+    
     @movie.update_attributes!(movie_params)
     flash[:notice] = "#{@movie.title} was successfully updated."
     redirect_to movie_path(@movie)

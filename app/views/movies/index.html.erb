@@ -13,12 +13,18 @@
   <%= submit_tag 'Refresh', id: 'ratings_submit', class: 'btn btn-primary' %>
 <% end %>
 
+
+
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>Movie Title</th>
+      <th class = "<%= @title_style%>">
+      <%= link_to 'Movie Title', movies_path(sort: "title", ratings: @ratings)%>
+      </th>
       <th>Rating</th>
-      <th>Release Date</th>
+      <th class = "<%= @release_date_style%>">
+      <%= link_to 'Release date', movies_path(sort: "release_date", ratings: @ratings )%>
+      </th>
       <th>More Info</th>
     </tr>
   </thead>
