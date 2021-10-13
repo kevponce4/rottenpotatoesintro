@@ -11,23 +11,35 @@ class MoviesController < ApplicationController
     @ratings_to_show = []
     @title_style ="bg-white hilite"
     @release_date_style = "bg-white hilite"
-    if params[:ratings].nil?
+    if params.empty?
+      params[:home] = 1
+    end
+    puts params
+    if params[:home] != 1
+      if params[:commit] == "Refresh"
+        session[:ratings] = params[:ratings]
+      end
+      if params[:sort] != nil
+        session[:sort] = params[:sort]
+      end
+    end
+    if session[:ratings].nil?
       @ratings_to_show = @all_ratings
     else
-      @ratings_to_show = params[:ratings].keys
-    @ratings = params[:ratings]
+      @ratings_to_show = session[:ratings].keys
+    @ratings = session[:ratings]
     end
     @order = ""
-    if params[:sort] == "title"
+    if session[:sort] == "title"
       @order = :title
       @title_style = "bg-warning hilite"
       @release_date_style = "bg-white hilite"
-    elsif params[:sort] == "release_date"
+    elsif session[:sort] == "release_date"
       @order = :release_date
       @release_date_style = "bg-warning hilite"
       @title_style = "bg-white hilite"
     end
-    @movies = Movie.where(:rating => @ratings_to_show).order params[:sort]
+    @movies = Movie.where(:rating => @ratings_to_show).order session[:sort]
   end
 
   def new
